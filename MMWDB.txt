@@ -1,7 +1,7 @@
 
 resetall()
 chance = math.random(9,60) --generate chance 
-lsratio = 11  --max loss streak. ex. 2(multi)*8(lsratio)=16(max loss streak)
+lsratio = 9  --max loss streak. ex. 2(multi)*8(lsratio)=16(max loss streak)
 edge = 1
 maxbet = balance*0.15
 
@@ -18,11 +18,12 @@ increaseOnLoss      = (((100-edge)/((100-edge)-chance))-1)*100.00
 increaseOnLossMulti = (100-edge)/((100-edge)-chance)
 calculateBetSize    = balance * (increaseOnLoss/100) / ((1+(increaseOnLoss/100))^lossStreaks - 1)
 basebet             = calculateBetSize-(calculateBetSize/200)
-nextbet             = basebet
+nextbet             = basebet/10
 
 function dobet()
 if previousbet>maxbet then
     log("••• | MAXBET STOP WIN END | •••")
+stop()end
     if win then
          bethigh = (math.random(2) == 1) and true or false 
          chance  = math.random(9,60)
@@ -38,7 +39,7 @@ if previousbet>maxbet then
         increaseOnLossMulti = (100-edge)/((100-edge)-chance)
         calculateBetSize    = balance * (increaseOnLoss/100) / ((1+(increaseOnLoss/100))^lossStreaks - 1)
         basebet             = calculateBetSize-(calculateBetSize/200)
-        nextbet             = basebet
+        nextbet             = basebet/10
     else 
         nextbet = previousbet*increaseOnLossMulti 
     end
