@@ -8,7 +8,7 @@ chance     = chance_bet
 payout     = (hedge / chance) - 1
 max_balance = balance
 basebet     = max_balance / div_base
-bazebet     = (max_balance / (div_base*100)) / ls_limit
+bazebet     = (max_balance / (div_base/100)) / ls_limit
 multi       = bazebet
 nextbet     = basebet
 betz = 0
@@ -58,7 +58,7 @@ function dobet()
             nextbet  = basebet
         else
             low_rate = false
-            bazebet  = (max_balance / (div_base*100)) / ls_limit
+            bazebet  = (max_balance / (div_base/100)) / ls_limit
             multi    = bazebet
             nextbet  = multi
         end
