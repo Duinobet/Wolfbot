@@ -1428,5 +1428,5 @@ async function handleResult(p100) {
   }
 }
 wdbLoader(Resource)
-  .then((result) => console.log(result))
+  .then((result) => console.log(result)
   .catch((error) => console.error(error);
