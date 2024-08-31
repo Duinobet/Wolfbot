@@ -6,7 +6,7 @@ chance_bet = 10
 ls_limit   = 1e2 / chance_bet
 chance     = chance_bet
 payout     = (hedge / chance) - 1
-max_balance = balance
+max_balance = 10
 basebet     = max_balance / div_base
 bazebet     = (max_balance / (div_base/100)) / ls_limit
 multi       = bazebet
@@ -40,7 +40,7 @@ function dobet()
     if (partial_profit >= 0) then
         resetpartialprofit()
         partial_profit = 0
-        max_balance    = balance
+        max_balance    = 10
     end
     if (ws > 0) then
         if (rate_wins < 50) then
