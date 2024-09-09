@@ -1,0 +1,67 @@
+math.randomseed(os.time())
+--resetseed()
+basebet = 1e-8
+min = 5
+max = 85
+min2 = 25 ------ loss > 4
+max2 = 45
+min3 = 15 ------ loss > 1
+max3 = 65
+min4 = 25 ------ loss > 8
+max4 = 65
+
+chance = math.random(min*100.00, max*100.00)/100.00
+bethigh = false
+nextbet = basebet
+StopOnProfit = balance*10
+round = 0
+multi = 0
+loss = 0
+series = 4
+betcounter = 0
+
+function dobet()
+betcounter = betcounter + 1
+
+if (profit > StopOnProfit) then
+    stop();
+end
+if (win) then
+    nextbet = basebet
+    chance = math.random(min*100.00, max*100.00)/100.00
+    round = 0
+    loss = 0
+    bethigh = not bethigh
+    if (currentstreak%2 == 0) and (win) then
+        chance = math.random(min2*100.00, max2*100.00)/100.00
+    end
+else
+    loss = loss + 1
+    bethigh = bethigh
+    chance = math.random(min3*100.00, max3*100.00)/100.00
+    if (loss >= 4) then
+        chance = math.random(min2*100.00, max2*100.00)/100.00
+    end
+    if (loss >= 8) then
+        chance = math.random(min4*100.00, max4*100.00)/100.00
+    end
+--------------------------------
+round = round + previousbet
+multi = 99/chance
+if (loss >= series) then
+    nextbet = (round + round/10) / (multi - 1)
+else
+    nextbet = (round + round/100)/ (multi - 1)
+end
+------------------------------------
+if (nextbet < basebet) then
+    nextbet = basebet
+end
+if (betcounter >= 50) then
+    --resetseed()
+    math.randomseed(os.time()) --- Initialize random seed
+    betcounter = 0
+end
+
+end
+end
