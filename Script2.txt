@@ -1,0 +1,65 @@
+bethigh = true
+basebet = 0.00000001
+prebet = 0.00000001
+ifProfit = 0.00000001
+gateway = 30
+passroll = 33
+multipler = 1.056
+winChance = {
+    49,
+    49
+}
+loseChance = {
+    3,
+    5
+}
+-------------
+gocount = 0
+fbcount = 0
+tmplose = 0
+cprofit = 0
+nextbet = prebet
+passcount = passroll
+chance = winChance[2]
+-------------
+function dobet()
+cprofit = cprofit + lastBet.profit
+if (win) then
+    nextbet = prebet
+    chance = math.random(winChance[1]*100,winChance[2]*100)/100
+    if (cprofit > ifProfit) and (win) then
+        gocount = 0
+        fbcount = 0
+        cprofit = 0
+        tmplose = 0
+        nextbet = prebet
+        passcount = passroll
+    else
+        gocount = 0
+        nextbet = prebet
+        passcount = passroll
+    end
+else
+    chance = math.random(loseChance[1]*100,loseChance[2]*100)/100
+    if (passcount == 0) then
+        if (gocount == gateway) then
+            nextbet = basebet*multipler
+            gocount = 0
+            passcount = passroll
+            fbcount = fbcount + 1
+        else
+            if (tmplose == 0) then
+                nextbet = basebet*multipler
+                tmplose = nextbet
+            else
+                nextbet = tmplose*multipler
+                tmplose = nextbet
+            end
+        end
+        gocount = gocount + 1
+    else
+        passcount = passcount - 1
+        nextbet = prebet
+    end
+end
+end
