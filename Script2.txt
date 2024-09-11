@@ -1,165 +1,87 @@
----=====================
+mina    = 52.95
+maxa    = 62.95
+chance  = math.random(mina*100.0, maxa*100.0)/100.0
+target = chance_to_target(chance)
+base    = balance/40000
+nextbet = base
+wincount = 0
+losecount=0
+stopnow = false
+first = true
+second = false
+secondwin = false
+third = false
+betcount=100
 
----CREATOR : @BEDUCODE
-
----=====================
-
-
-
-bb      = balance/4e7
-
-w1      = 95
-
-w2      = 98
-
-pc      = 0
-
-ip      = 0.00000001
-
-ilos    = 1.083
-
-iwin    = 1.122
-
-rs      = 1000000000
-
-rl      = 0
-
-tlp     = 100000
-
-stoplose  = 0
-
-cutlsval  = 0.1
-
-cutloss   = false
-
-chancetemp = 0
-
-l = 0
-
-loss = 0
-
-red = 0
-
-winmax = 0
-
-
-
-resetseed()
-
-resetstats()
-
-
-
-nextbet = bb 
-
-chance  = w1
-
-
+profittarget= 999.00000000
 
 function dobet()
 
-    pb = previousbet
+   if betcount == 500 then
+      betcount=0
+      resetseed();
+   else
+      betcount=betcount+1
+   end
 
-    pf = profit
+   if (balance) >= profittarget then
+      stop();
+      print(balance)
+      print("TARGET ACHIEVED!!!")
+   end
 
-    ch = {w1,w2} 
-
-
-
-    if (rl == rs) then
-
-        rl = 0
-
-        resetseed();
-
-    else
-
-        rl = rl + 1
-
-    end
-
-    
-
-    if win then
-
-        inmax = winmax +1 
-
-        l = 0
-
-        loss = 0
-
-        red = 0  
-
-        if (pf >= pc + ip) then
-
-            stoplose  = balance - (balance * cutlsval)
-
-            pc = pf
-
-            nb = balance/4e7
-
-            chancetemp = 0
-
-        else
-
-            if chancetemp == 0 or chancetemp <= 30 then
-
-                chancetemp = w2
-
-                ch = {chancetemp,chancetemp}
-
-            else
-
-                chancetemp = chancetemp - rs
-
-                ch = {chancetemp,chancetemp}
-
-            end
-
-            nb = pb * iwin
-
-        end
-
-    else
-
-        l = l +1
-
-        loss = loss +1
-
-        red = red +1
-
-        winmax = 0
-
-        nb = pb * ilos
-
-    end
-
-
-
-    if (winmax >=2) or (red >= 1) then
-
-        bethigh = not bethigh
-
-    end
-
-
-
-    nextbet = nb
-
-
-
-    if balance >= tlp then stop() end
-
-    chance  = math.random(ch[1]*100.0, ch[2]*100.0)/100.0
-
-
-
-    if cutloss then
-
-        if balance <= stoplose then stop() end
-
-    end
-
-
-
+   if (balance) < (nextbet) then
+      stop();
+      print(balance)
+      print("INSUFFICIENT FUNDS")
+   end
+   done = false
+   if win then
+      if(first) then
+         chance  = math.random(mina*100.0, maxa*100.0)/100.0
+         target = chance_to_target(chance)
+         nextbet = base
+         if(stopnow) then
+            stop()
+         end
+      end
+      if(second) then
+         secondwin = true
+         second = false
+         third = true
+         done = true
+      end
+      if(third and not done) then
+         if(secondwin) then
+            nextbet = base
+            if(stopnow) then stop() end
+         else
+            nextbet = previousbet * 3
+         end
+         third = false
+         first = true
+      end
+   else
+      if(first and not done) then
+         first = false
+         second = true
+         done = true
+      end
+      if(second and not done) then
+         secondwin = false
+         second = false
+         third = true
+         done = true
+      end
+      if(third and not done) then
+         third = false
+         first = true
+         if (secondwin) then
+            nextbet = previousbet * 3
+         else
+            nextbet = previousbet * 4.5
+         end
+         done = true
+      end
+   end
 end
